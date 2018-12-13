@@ -94,8 +94,7 @@ void FazConexaoWiFi(void)
     //   (UmidadePercentual-0) / (100-0)  =  (ValorADC - 978) / (-978)
     //      Logo:
     //      UmidadePercentual = 100 * ((978-ValorADC) / 978)  
-
-    UmidadePercentual = 100 * ((1024-(float)ValorADC) /1024);
+    UmidadePercentual = 100 * ((978-(float)-ValorADC) /978);
     Serial.print("[Umidade Percentual]");
     Serial.print(UmidadePercentual);
     Serial.println("%");
@@ -109,13 +108,22 @@ void FazConexaoWiFi(void)
          FazConexaoWiFi(); //chama a funcao wifi
          Serial.println("ESP8266-NODEMCU");
       }
+
+      /////////////////////////////////////////////////////////////////////
+      
       //loop principal
       void loop()
       {
-        float UmidadePercentualLida;
-        int UmidadePercentualTruncada;
-        char FieldUmidade[11];
-
+       Serial.print("Analogico:");
+       Serial.print(analogRead(pino_sinal_analogico));
+       Serial.print(" ");
+       Serial.print("Status:");
+       if (analogRead(pino_sinal_analogico) > 700) {
+        Serial.println("SOLO SECO");
+       }else{
+        Serial.println("SOLO MOLHADO");
+       
+       }
         //Forca desconexao ao ThingSpeak 
         if (client.connected())
         {
@@ -124,14 +132,11 @@ void FazConexaoWiFi(void)
           Serial.println();
         }
 
-        UmidadePercentualLida = FazLeituraUmidade();
-        UmidadePercentualTruncada = (int)UmidadePercentualLida; // trunca umidade como numero inteiro
-
         //Verifica se esta conectado no wifi e se é o momento de enviar dados ao ThingSpeak
         if(!client.connected() && (millis() - lastConnectionTime > INTERVALO_ENVIO_THINGSPEAK))
         {
-          sprintf(FieldUmidade,"field2=%d",UmidadePercentualTruncada);
-          EnviaInformacoesThingspeak(FieldUmidade);  
+          Serial.print(analogRead(pino_sinal_analogico),"field2");
+          EnviaInformacoesThingspeak(pino_sinal_analogico);  
         }
         delay(1000);
       }
