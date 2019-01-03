@@ -3,7 +3,7 @@
 //WIFI
 #define SSID_REDE  "P1d3zz"
 #define SENHA_REDE  "987654321"
-#define INTERVALO_ENVIO_THINGSPEAK 30000 //intervalo entre envios de dados ao ThingSpeak
+#define INTERVALO_ENVIO_THINGSPEAK 150000 //intervalo entre envios de dados ao ThingSpeak
 #define pino_sinal_analogico A0
 // constantes e variaveis 
 char EnderecoAPIThingSpeak[]= "api.thingspeak.com";
